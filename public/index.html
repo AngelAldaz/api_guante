@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Display de Mensajes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #ffff00;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+      }
+
+      #message-display {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #000;
+        text-align: center;
+        padding: 2rem;
+        max-width: 90%;
+        word-wrap: break-word;
+      }
+
+      .cursor {
+        color: #ffff00;
+        display: inline-block;
+        width: 3px;
+        background-color: #000;
+        margin-left: 5px;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message-display">Esperando mensaje...</div>
+
+    <script>
+      // Función para obtener y mostrar el mensaje actual
+      async function updateMessage() {
+        try {
+          const response = await fetch("/api/message");
+          const data = await response.json();
+          const messageDiv = document.getElementById("message-display");
+          messageDiv.innerHTML = data.message + '<span class="cursor">|</span>';
+        } catch (error) {
+          console.error("Error al obtener el mensaje:", error);
+        }
+      }
+
+      // Actualizar el mensaje cada segundo
+      setInterval(updateMessage, 1000);
+
+      // Cargar el mensaje inicial
+      updateMessage();
+    </script>
+  </body>
+</html>
