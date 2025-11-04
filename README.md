@@ -2,7 +2,36 @@
 
 Aplicación web que recibe mensajes vía API y los muestra en una pantalla amarilla centrada.
 
-## Instalación
+## 🐳 Ejecución con Docker (Recomendado)
+
+### Opción 1: Usar Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+### Opción 2: Usar Docker directamente
+
+```bash
+# Construir la imagen
+docker build -t lsm-display .
+
+# Ejecutar el contenedor
+docker run -d -p 3000:3000 --name lsm-display lsm-display
+```
+
+### Detener el contenedor
+
+```bash
+# Con Docker Compose
+docker-compose down
+
+# Con Docker directamente
+docker stop lsm-display
+docker rm lsm-display
+```
+
+## 📦 Instalación Local (Sin Docker)
 
 ```bash
 npm install
