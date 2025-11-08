@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: lsm-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: lsm_db
+      MYSQL_USER: lsmuser
+      MYSQL_PASSWORD: lsmpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
   lsm-app:
     build: .
     container_name: lsm-display
@@ -9,3 +28,13 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_USER=lsmuser
+      - DB_PASSWORD=lsmpassword
+      - DB_NAME=lsm_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
